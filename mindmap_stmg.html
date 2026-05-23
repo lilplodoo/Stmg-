@@ -1,1 +1,1411 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mind Map Complète STMG 1ère + Terminale MSDGN</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0a0e27 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #e0e7ff;
+        }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        h1 {
+            color: #60a5fa;
+            font-size: 2.8em;
+            margin-bottom: 10px;
+            text-shadow: 0 4px 20px rgba(96, 165, 250, 0.3);
+        }
+
+        .subtitle {
+            color: #a5f3fc;
+            font-size: 1.2em;
+            font-weight: 300;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #3b82f6, #0ea5e9);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+            font-size: 0.95em;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.5);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .section {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .section:nth-child(2) { animation-delay: 0.1s; }
+        .section:nth-child(3) { animation-delay: 0.2s; }
+
+        .section-title {
+            color: #60a5fa;
+            font-size: 1.7em;
+            margin-bottom: 25px;
+            padding: 15px;
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid #0ea5e9;
+            border-radius: 5px;
+            font-weight: 600;
+        }
+
+        .mindmap {
+            background: rgba(15, 23, 42, 0.7);
+            border-radius: 12px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .node {
+            margin-bottom: 15px;
+            animation: slideIn 0.6s ease-out;
+        }
+
+        .node:nth-child(1) { animation-delay: 0.05s; }
+        .node:nth-child(2) { animation-delay: 0.1s; }
+        .node:nth-child(3) { animation-delay: 0.15s; }
+        .node:nth-child(4) { animation-delay: 0.2s; }
+        .node:nth-child(5) { animation-delay: 0.25s; }
+        .node:nth-child(6) { animation-delay: 0.3s; }
+        .node:nth-child(7) { animation-delay: 0.35s; }
+        .node:nth-child(8) { animation-delay: 0.4s; }
+        .node:nth-child(9) { animation-delay: 0.45s; }
+        .node:nth-child(10) { animation-delay: 0.5s; }
+
+        .node-title {
+            background: linear-gradient(135deg, #3b82f6, #0ea5e9);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+            position: relative;
+            overflow: hidden;
+            font-size: 0.95em;
+        }
+
+        .node-title::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.15);
+            transition: left 0.3s ease;
+        }
+
+        .node-title:hover {
+            transform: translateX(5px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+        }
+
+        .node-title:hover::before {
+            left: 100%;
+        }
+
+        .node-title.active {
+            background: linear-gradient(135deg, #0ea5e9, #06b6d4);
+            box-shadow: 0 8px 20px rgba(6, 182, 212, 0.4);
+        }
+
+        .node-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+            background: rgba(30, 41, 59, 0.8);
+            border-radius: 0 0 8px 8px;
+            border-top: 2px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .node-content.active {
+            max-height: 2000px;
+        }
+
+        .definition {
+            padding: 12px;
+            color: #cbd5e1;
+            font-size: 0.9em;
+            line-height: 1.6;
+            border-left: 3px solid #0ea5e9;
+            background: rgba(6, 182, 212, 0.05);
+            margin: 8px 0;
+        }
+
+        .sub-items {
+            padding: 12px;
+            color: #cbd5e1;
+        }
+
+        .sub-item {
+            padding: 6px 0;
+            padding-left: 18px;
+            position: relative;
+            font-size: 0.88em;
+            line-height: 1.5;
+        }
+
+        .sub-item::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #60a5fa;
+            font-weight: bold;
+        }
+
+        .formula {
+            background: rgba(79, 172, 254, 0.1);
+            border: 1px solid #3b82f6;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            color: #60a5fa;
+            word-break: break-word;
+        }
+
+        .example {
+            background: rgba(34, 197, 94, 0.1);
+            border-left: 3px solid #22c55e;
+            padding: 10px;
+            margin: 8px 0;
+            font-size: 0.88em;
+            color: #a7f3d0;
+        }
+
+        .warning {
+            background: rgba(251, 146, 60, 0.1);
+            border-left: 3px solid #fb923c;
+            padding: 10px;
+            margin: 8px 0;
+            font-size: 0.88em;
+            color: #ffedd5;
+        }
+
+        .footer {
+            text-align: center;
+            color: #64748b;
+            padding: 30px 20px;
+            border-top: 1px solid rgba(59, 130, 246, 0.2);
+            margin-top: 50px;
+            font-size: 0.9em;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @media (max-width: 1400px) {
+            .wrapper { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .wrapper { grid-template-columns: 1fr; }
+            h1 { font-size: 1.8em; }
+            .section-title { font-size: 1.3em; }
+            .node-title { font-size: 0.9em; padding: 10px; }
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        .toc {
+            background: rgba(30, 41, 59, 0.7);
+            border-radius: 12px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            padding: 20px;
+            margin-bottom: 40px;
+        }
+
+        .toc-title {
+            color: #60a5fa;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .toc-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 10px;
+        }
+
+        .toc-item {
+            padding: 10px;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 5px;
+            border-left: 3px solid #0ea5e9;
+            font-size: 0.95em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .toc-item:hover {
+            background: rgba(59, 130, 246, 0.2);
+            transform: translateX(5px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 STMG Complète : 1ère + Terminale MSDGN</h1>
+            <p class="subtitle">Tous les cours, définitions, formules et calculs sans rien oublier</p>
+        </header>
+
+        <div class="controls">
+            <button class="btn" onclick="expandAll()">📖 Tout développer</button>
+            <button class="btn" onclick="collapseAll()">📕 Tout réduire</button>
+            <button class="btn" onclick="toggleFullscreen()">⛶ Plein écran</button>
+        </div>
+
+        <div class="toc">
+            <div class="toc-title">🗂️ Table des Matières</div>
+            <div class="toc-items">
+                <div class="toc-item">📘 Première STMG</div>
+                <div class="toc-item">🏢 De l'Individu à l'Acteur</div>
+                <div class="toc-item">💻 Numérique & Intelligence Collective</div>
+                <div class="toc-item">💰 Création de Valeur & Performance</div>
+                <div class="toc-item">⏰ Temps & Risques</div>
+                <div class="toc-item">📊 Terminale MSDGN</div>
+                <div class="toc-item">🎯 Management</div>
+                <div class="toc-item">💳 Gestion & Finance</div>
+                <div class="toc-item">📢 Mercatique (Marketing)</div>
+                <div class="toc-item">👥 RH & Communication</div>
+            </div>
+        </div>
+
+        <div class="wrapper">
+            <!-- ====== SECTION 1: PREMIÈRE STMG - DE L'INDIVIDU À L'ACTEUR ====== -->
+            <div class="section">
+                <h2 class="section-title">📘 1ère STMG - De l'Individu à l'Acteur</h2>
+                <div class="mindmap">
+                    <!-- Types d'organisations -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Les Différents Types d'Organisations</div>
+                        <div class="node-content">
+                            <div class="definition"><strong>Définition :</strong> Groupements formés pour atteindre collectivement un objectif commun.</div>
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Entreprise privée :</strong> But lucratif, propriété de personnes physiques/morales, produit biens ou services</div>
+                                <div class="sub-item"><strong>Association :</strong> But non lucratif, regroupement volontaire, affectation des excédents au projet social</div>
+                                <div class="sub-item"><strong>Organisation publique :</strong> Service public, financement par impôts, gouvernance démocratique</div>
+                                <div class="sub-item"><strong>Coopérative :</strong> Propriété collective, gestion démocratique, partage des bénéfices</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- De l'individu à l'acteur -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Comment Devient-on Acteur ?</div>
+                        <div class="node-content">
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Personnalité :</strong> Ensemble des traits psychologiques (tempérament, caractère, valeurs)</div>
+                                <div class="sub-item"><strong>Émotions :</strong> Réactions affectives influençant le comportement et décisions</div>
+                                <div class="sub-item"><strong>Perception :</strong> Interprétation subjective de la réalité basée sur expériences</div>
+                                <div class="sub-item"><strong>Attitudes :</strong> Prédispositions à réagir face à une situation</div>
+                                <div class="sub-item"><strong>Compétences :</strong> Connaissances, savoir-faire, savoir-être acquis</div>
+                                <div class="sub-item"><strong>Identité numérique :</strong> Présence et données personnelles en ligne</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Communication interpersonnelle -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Communication Interpersonnelle</div>
+                        <div class="node-content">
+                            <div class="definition"><strong>Définition :</strong> Processus d'échange d'informations entre au moins deux personnes.</div>
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Éléments :</strong> Émetteur, message, canal, récepteur, feedback, contexte</div>
+                                <div class="sub-item"><strong>Communication verbale :</strong> Paroles, langage, vocabulaire</div>
+                                <div class="sub-item"><strong>Communication non-verbale :</strong> Gestes, mimiques, ton, posture</div>
+                                <div class="sub-item"><strong>Barrières :</strong> Bruit, préjugés, différences culturelles, mauvaise écoute</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Activité de travail -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">L'Activité de Travail & Évaluation</div>
+                        <div class="node-content">
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Conditions de travail :</strong> Horaires, salaire, environnement physique, sécurité</div>
+                                <div class="sub-item"><strong>Qualifications :</strong> Diplômes, certifications, capacités requises</div>
+                                <div class="sub-item"><strong>Compétences :</strong> Capacités mises en œuvre effectivement au travail</div>
+                                <div class="sub-item"><strong>Évaluation :</strong> Appréciation de l'accomplissement des objectifs fixés</div>
+                                <div class="sub-item"><strong>Rétribution :</strong> Salaire, avantages, reconnaissance</div>
+                                <div class="sub-item"><strong>Productivité :</strong> Production / Ressources utilisées</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Création de valeur ajoutée -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Création de Valeur Ajoutée</div>
+                        <div class="node-content">
+                            <div class="definition"><strong>Valeur Ajoutée (VA) :</strong> Richesse créée par l'organisation au-delà des inputs.</div>
+                            <div class="formula">VA = CA - Consommations Intermédiaires</div>
+                            <div class="formula">CA = Chiffre d'Affaires</div>
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Répartition :</strong> Salaires (salariés) + Impôts + Intérêts (créanciers) + Dividendes (actionnaires)</div>
+                                <div class="sub-item"><strong>Par acteur :</strong> Chaque employé contribue à la création de VA</div>
+                                <div class="sub-item"><strong>Mesure de contribution :</strong> Indicateurs de productivité et performance</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Performance -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Les Trois Dimensions de la Performance</div>
+                        <div class="node-content">
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Performance commerciale :</strong> Fidélité clients, CA, part de marché, chiffre d'affaires</div>
+                                <div class="sub-item"><strong>Performance financière :</strong> Rentabilité, profitabilité, dividendes</div>
+                                <div class="sub-item"><strong>Performance organisationnelle :</strong> Qualité, productivité, bien-être des salariés</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Prix & Coûts -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Prix, Coûts & Marges (1ère)</div>
+                        <div class="node-content">
+                            <div class="definition"><strong>Coût :</strong> Ensemble des charges liées à une production.</div>
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Coût d'achat :</strong> Prix d'achat + Frais d'approche</div>
+                                <div class="sub-item"><strong>Coût de production :</strong> Matières + Main d'œuvre + Charges indirectes</div>
+                                <div class="sub-item"><strong>Coût de revient :</strong> Coût complet jusqu'à la livraison au client</div>
+                                <div class="sub-item"><strong>Marge brute :</strong> PV HT - Prix d'achat HT</div>
+                                <div class="sub-item"><strong>Taux de marge :</strong> (Marge / Coût d'achat) × 100</div>
+                                <div class="sub-item"><strong>Taux de marque :</strong> (Marge / PV HT) × 100</div>
+                            </div>
+                            <div class="formula">Marge = PV HT - Coût d'achat HT</div>
+                        </div>
+                    </div>
+
+                    <!-- Valeur perçue -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Valeur Perçue & Valeur Financière</div>
+                        <div class="node-content">
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Valeur perçue :</strong> Image, réputation, qualité, satisfaction client, marque</div>
+                                <div class="sub-item"><strong>Valeur financière (revenu) :</strong> Basée sur flux de revenus futurs</div>
+                                <div class="sub-item"><strong>Valeur financière (patrimoine) :</strong> Basée sur valeur des actifs</div>
+                                <div class="sub-item"><strong>Impact sur prix :</strong> Qualité et image justifient un prix plus élevé</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ====== SECTION 2: PREMIÈRE STMG - NUMÉRIQUE & INTELLIGENCE COLLECTIVE ====== -->
+            <div class="section">
+                <h2 class="section-title">💻 1ère STMG - Numérique & Intelligence Collective</h2>
+                <div class="mindmap">
+                    <!-- Information & données -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Information vs Données</div>
+                        <div class="node-content">
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Donnée :</strong> Fait brut, non contextualisé, sans signification immédiate</div>
+                                <div class="sub-item"><strong>Information :</strong> Donnée contextualisée, interprétée, utile pour la décision</div>
+                                <div class="sub-item"><strong>Big data :</strong> Très grands volumes de données (structure, vitesse, variété)</div>
+                                <div class="sub-item"><strong>Open data :</strong> Données publiques, librement accessibles et réutilisables</div>
+                                <div class="sub-item"><strong>Rôle de l'information :</strong> Réduire l'incertitude, aider à la prise de décision</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Système d'information -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Système d'Information (SI)</div>
+                        <div class="node-content">
+                            <div class="definition"><strong>Définition :</strong> Ensemble intégré de ressources pour collecter, traiter, stocker et diffuser l'information.</div>
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Composants :</strong> Matériel, logiciels, données, personnes, procédures</div>
+                                <div class="sub-item"><strong>Objectifs :</strong> Aider au pilotage, soutenir opérations, répondre à besoins</div>
+                                <div class="sub-item"><strong>ERP/Logiciels intégrés :</strong> Gestion centralisée de toutes les données</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Numérique & travail -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Impact du Numérique sur l'Organisation</div>
+                        <div class="node-content">
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Télétravail :</strong> Travail à distance, flexibilité, communication numérique</div>
+                                <div class="sub-item"><strong>Cloud computing :</strong> Ressources informatiques en ligne, accès distant</div>
+                                <div class="sub-item"><strong>Collaboration numérique :</strong> Outils collaboratifs, partage de documents</div>
+                                <div class="sub-item"><strong>Agilité organisationnelle :</strong> Capacité à s'adapter rapidement aux changements</div>
+                                <div class="sub-item"><strong>Risques :</strong> Cybersécurité, dépendance technologique, surcharge informationnelle</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Intelligence collective -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Intelligence Collective</div>
+                        <div class="node-content">
+                            <div class="definition"><strong>Définition :</strong> Capacité d'un groupe à résoudre des problèmes mieux qu'un individu seul.</div>
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Conditions :</strong> Diversité, autonomie, décentralisation, agrégation</div>
+                                <div class="sub-item"><strong>Partage d'information :</strong> Transparence, communication, accessibilité</div>
+                                <div class="sub-item"><strong>Créativité collective :</strong> Brainstorming, échanges d'idées</div>
+                                <div class="sub-item"><strong>Outils :</strong> Intranet, wikis, réseaux sociaux internes, forums</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Processus -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Processus Organisationnels</div>
+                        <div class="node-content">
+                            <div class="definition"><strong>Processus :</strong> Suite d'activités organisées pour transformer des inputs en outputs.</div>
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Processus opérationnel :</strong> Production de biens/services (supply chain)</div>
+                                <div class="sub-item"><strong>Processus support :</strong> Ressources humaines, informatique, finances</div>
+                                <div class="sub-item"><strong>Pilotage :</strong> Définition d'objectifs, suivi, contrôle</div>
+                                <div class="sub-item"><strong>Flux tendus :</strong> Minimiser stocks, réduire délais (juste à temps)</div>
+                                <div class="sub-item"><strong>Flux poussés :</strong> Production selon prévisions</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Transformation numérique -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Transformation Digitale</div>
+                        <div class="node-content">
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Dématerialisation :</strong> Passage du papier au numérique</div>
+                                <div class="sub-item"><strong>Automatisation :</strong> Robots, algorithmes, tâches répétitives</div>
+                                <div class="sub-item"><strong>Dématérialisation des processus :</strong> Workflows numériques</div>
+                                <div class="sub-item"><strong>Données ouvertes :</strong> Open data, API, interopérabilité</div>
+                                <div class="sub-item"><strong>Chaîne de blocs (Blockchain) :</strong> Sécurité, transparence, traçabilité</div>
+                                <div class="sub-item"><strong>IA & Automatisation :</strong> Décisions automatisées, prédictions</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Relations numériques -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Numérique & Relations</div>
+                        <div class="node-content">
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Relation client :</strong> CRM, digitalisation, interactivité</div>
+                                <div class="sub-item"><strong>E-commerce :</strong> Vente en ligne, plateformes numériques</div>
+                                <div class="sub-item"><strong>Réseaux sociaux :</strong> Community management, engagement client</div>
+                                <div class="sub-item"><strong>Communication interne :</strong> Intranet, messagerie, collaboratif</div>
+                                <div class="sub-item"><strong>Traces numériques :</strong> Données personnelles, RGPD, confidentialité</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Qualité & données -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Qualité de l'Information</div>
+                        <div class="node-content">
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Exactitude :</strong> Données correctes et précises</div>
+                                <div class="sub-item"><strong>Complétude :</strong> Données complètes, sans lacunes</div>
+                                <div class="sub-item"><strong>Actualité :</strong> Informations à jour, en temps réel</div>
+                                <div class="sub-item"><strong>Pertinence :</strong> Information utile pour la décision</div>
+                                <div class="sub-item"><strong>Accessibilité :</strong> Facile à obtenir et comprendre</div>
+                                <div class="sub-item"><strong>Sécurité :</strong> Protection contre l'accès non autorisé</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ====== SECTION 3: PREMIÈRE STMG - CRÉATION DE VALEUR & PERFORMANCE ====== -->
+            <div class="section">
+                <h2 class="section-title">💰 1ère STMG - Création de Valeur & Performance</h2>
+                <div class="mindmap">
+                    <!-- Gestion des organisations -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Gestion des Organisations</div>
+                        <div class="node-content">
+                            <div class="definition"><strong>Gestion :</strong> Ensemble des processus pour coordonner action collective et atteindre objectifs.</div>
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Planification :</strong> Définir objectifs et moyens</div>
+                                <div class="sub-item"><strong>Organisation :</strong> Structurer ressources et responsabilités</div>
+                                <div class="sub-item"><strong>Direction :</strong> Guider et motiver les équipes</div>
+                                <div class="sub-item"><strong>Contrôle :</strong> Vérifier résultats et ajuster</div>
+                                <div class="sub-item"><strong>Différences sectorielles :</strong> Entreprise ≠ Association ≠ Administration</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ressources tangibles -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Ressources Tangibles & Intangibles</div>
+                        <div class="node-content">
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Ressources tangibles :</strong> Bâtiments, machines, stock, argent</div>
+                                <div class="sub-item"><strong>Ressources intangibles :</strong> Marque, savoir-faire, réputation, patents</div>
+                                <div class="sub-item"><strong>Ressources humaines :</strong> Compétences, expérience, motivation</div>
+                                <div class="sub-item"><strong>Ressources financières :</strong> Capital, emprunts, subventions, trésorerie</div>
+                                <div class="sub-item"><strong>Ressources informationnelles :</strong> Données, systèmes, expertise</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Coûts complets (1ère) -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Analyse des Coûts (1ère)</div>
+                        <div class="node-content">
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Charges directes :</strong> Affectables directement à un produit (MP, MOD)</div>
+                                <div class="sub-item"><strong>Charges indirectes :</strong> Partagées entre plusieurs produits (loyer, électricité)</div>
+                                <div class="sub-item"><strong>Charges variables :</strong> Augmentent avec volume (matières premières)</div>
+                                <div class="sub-item"><strong>Charges fixes :</strong> Indépendantes du volume (salaires fixes)</div>
+                                <div class="sub-item"><strong>Coût complet :</strong> Toutes charges directes + indirectes attribuées</div>
+                            </div>
+                            <div class="formula">Coût complet = (Ch.directes + Ch.indirectes réparties) / Quantité</div>
+                        </div>
+                    </div>
+
+                    <!-- Valeurs multiples -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Les Différentes Valeurs Créées</div>
+                        <div class="node-content">
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Valeur ajoutée :</strong> Chiffre affaires - Consommations intermédiaires</div>
+                                <div class="sub-item"><strong>Valeur sociale :</strong> Emplois créés, conditions de travail, impact social</div>
+                                <div class="sub-item"><strong>Valeur financière (revenu) :</strong> Basée sur flux monétaires futurs</div>
+                                <div class="sub-item"><strong>Valeur boursière :</strong> Prix de l'action × nombre d'actions</div>
+                                <div class="sub-item"><strong>Valeur perçue :</strong> Image, marque, qualité, satisfaction</div>
+                                <div class="sub-item"><strong>Valeur partenariale :</strong> Bénéfices pour partenaires, fournisseurs</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Qualité -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Qualité & Contrôle Qualité</div>
+                        <div class="node-content">
+                            <div class="definition"><strong>Qualité :</strong> Conformité aux spécifications et satisfaction du client.</div>
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Contrôle qualité :</strong> Vérification des produits avant livraison</div>
+                                <div class="sub-item"><strong>Assurance qualité :</strong> Prévention des défauts pendant production</div>
+                                <div class="sub-item"><strong>Amélioration continue :</strong> Kaizen, lean, réduction des défauts</div>
+                                <div class="sub-item"><strong>Coût de la qualité :</strong> Prévention, détection, correction des défauts</div>
+                                <div class="sub-item"><strong>Normes :</strong> ISO 9001, certifications sectorielles</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Relation prix-coût-qualité -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Trilogie : Prix - Coût - Qualité</div>
+                        <div class="node-content">
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Relation :</strong> Prix doit couvrir coûts ET offrir qualité suffisante</div>
+                                <div class="sub-item"><strong>Positionnement :</strong> Haut de gamme (qualité/prix élevé) ou entrée de gamme</div>
+                                <div class="sub-item"><strong>Compétitivité :</strong> Balancer prix attractif, coûts maîtrisés, qualité irréprochable</div>
+                                <div class="sub-item"><strong>Exemple :</strong> Luxe = Prix haut + Qualité excellente, Discount = Prix bas + Qualité acceptable</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Performance commerciale -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Performance Commerciale & Financière</div>
+                        <div class="node-content">
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>CA (Chiffre d'affaires) :</strong> Quantité vendue × Prix de vente</div>
+                                <div class="sub-item"><strong>Part de marché :</strong> CA / CA total du marché × 100</div>
+                                <div class="sub-item"><strong>Fidélité client :</strong> Taux de rétention, répétition d'achat</div>
+                                <div class="sub-item"><strong>Profitabilité :</strong> Bénéfice / CA × 100</div>
+                                <div class="sub-item"><strong>Rentabilité :</strong> Résultat / Capitaux investis × 100</div>
+                                <div class="sub-item"><strong>Indicateurs commerciaux :</strong> Nombre de clients, panier moyen, taux de conversion</div>
+                            </div>
+                            <div class="formula">CA = Quantité × Prix</div>
+                        </div>
+                    </div>
+
+                    <!-- Risques -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Temps & Risques (Introduction)</div>
+                        <div class="node-content">
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Maîtrise du temps :</strong> Délais de production, respect des échéances</div>
+                                <div class="sub-item"><strong>Risques opérationnels :</strong> Production, qualité, supply chain</div>
+                                <div class="sub-item"><strong>Risques financiers :</strong> Trésorerie, endettement, inflation</div>
+                                <div class="sub-item"><strong>Risques commerciaux :</strong> Demande, concurrence, marché</div>
+                                <div class="sub-item"><strong>Risques stratégiques :</strong> Obsolescence, innovation, changement législatif</div>
+                                <div class="sub-item"><strong>Outils de planification :</strong> Gantt, PERT, budgets, prévisions</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ====== SECTION 4: TERMINALE - MANAGEMENT ====== -->
+            <div class="section">
+                <h2 class="section-title">🎯 Terminale MSDGN - Management</h2>
+                <div class="mindmap">
+                    <!-- Fondamentaux management -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Définition & Fondamentaux</div>
+                        <div class="node-content">
+                            <div class="definition"><strong>Management :</strong> Art de diriger, organiser et gérer une entreprise/organisation pour atteindre ses objectifs.</div>
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>4 Grandes Fonctions (Mintzberg) :</strong> Planifier, Organiser, Diriger, Contrôler</div>
+                                <div class="sub-item"><strong>Finalité :</strong> Créer de la valeur et assurer pérennité de l'organisation</div>
+                                <div class="sub-item"><strong>Coordination :</strong> Harmoniser initiatives individuelles pour action collective</div>
+                                <div class="sub-item"><strong>Prise de décision :</strong> Choix entre alternatives en fonction des objectifs</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stratégique vs opérationnel -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Management Stratégique vs Opérationnel</div>
+                        <div class="node-content">
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>STRATÉGIQUE :</strong> Long terme (>3 ans), Direction générale, définit grandes orientations</div>
+                                <div class="sub-item"><strong>OPÉRATIONNEL :</strong> Court/moyen terme, Cadres intermédiaires, applique la stratégie</div>
+                                <div class="sub-item"><strong>Décisions stratégiques :</strong> Croissance, fusion, nouveau marché, restructuration (irréversibles)</div>
+                                <div class="sub-item"><strong>Décisions opérationnelles :</strong> Production, stock, prix, recrutement (programmables)</div>
+                                <div class="sub-item"><strong>Articulation :</strong> Stratégie donne cadre aux opérations, opérations informent stratégie</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Diagnostic stratégique -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Diagnostic Stratégique (SWOT)</div>
+                        <div class="node-content">
+                            <div class="definition"><strong>Analyse SWOT :</strong> Évaluation des Strengths, Weaknesses, Opportunities, Threats.</div>
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Forces (S) :</strong> Compétences, ressources, avantages distinctifs internes</div>
+                                <div class="sub-item"><strong>Faiblesses (W) :</strong> Manques, défaillances, points faibles internes</div>
+                                <div class="sub-item"><strong>Opportunités (O) :</strong> Tendances, niches, évolutions favorables externes</div>
+                                <div class="sub-item"><strong>Menaces (T) :</strong> Concurrence, réglementation, crises externes</div>
+                                <div class="sub-item"><strong>Matrice :</strong> Confronter ressources internes à environnement externe</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Avantage concurrentiel -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Avantage Concurrentiel & Compétences</div>
+                        <div class="node-content">
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Avantage concurrentiel :</strong> Ce qui différencie de la concurrence et justifie prix/fidélité</div>
+                                <div class="sub-item"><strong>Compétences distinctives :</strong> Capacités uniques, difficiles à imiter (savoir-faire)</div>
+                                <div class="sub-item"><strong>Facteurs clés de succès (FCS) :</strong> Éléments essentiels pour réussir dans le secteur</div>
+                                <div class="sub-item"><strong>Chaîne de valeur :</strong> Succession d'activités ajoutant de la valeur (Porter)</div>
+                                <div class="sub-item"><strong>Imitation :</strong> Difficile si basée sur culture, histoire, expérience collective</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stratégies génériques -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Stratégies Génériques (Porter)</div>
+                        <div class="node-content">
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Domination par les coûts :</strong> Être le moins cher, économies d'échelle, volumes</div>
+                                <div class="sub-item"><strong>Différenciation :</strong> Unique, qualité, innovation, image, service</div>
+                                <div class="sub-item"><strong>Concentration/Niche :</strong> Cibler segment spécifique avec coûts bas ou différenciation</div>
+                                <div class="sub-item"><strong>Risque :</strong> Ne pas choisir (« stuck in the middle ») ⟹ perte de compétitivité</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Structure organisationnelle -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Structure Organisationnelle</div>
+                        <div class="node-content">
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Hiérarchique :</strong> Pyramide d'autorité, communications verticales, spécialisation</div>
+                                <div class="sub-item"><strong>Matricielle :</strong> Deux responsabilités (fonction + projet), plus flexible</div>
+                                <div class="sub-item"><strong>Plate :</strong> Peu de niveaux, responsabilités décentralisées, autonomie</div>
+                                <div class="sub-item"><strong>Réseau :</strong> Partenariats, collaboration externe, alliances</div>
+                                <div class="sub-item"><strong>Centralisation :</strong> Pouvoir concentré au sommet, contrôle strict</div>
+                                <div class="sub-item"><strong>Décentralisation :</strong> Pouvoir distribué, autonomie locales, réactivité</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Motivation & leadership -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Motivation & Leadership</div>
+                        <div class="node-content">
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Théories de la motivation :</strong> Maslow (besoins), Herzberg (hygiène/motivation), McGregor (X/Y)</div>
+                                <div class="sub-item"><strong>Facteurs de motivation :</strong> Salaire, reconnaissance, responsabilité, autonomie, carrière</div>
+                                <div class="sub-item"><strong>Leadership :</strong> Capacité à influencer et inspirer les équipes</div>
+                                <div class="sub-item"><strong>Styles de direction :</strong> Autoritaire, démocratique, paternaliste, situationnel</div>
+                                <div class="sub-item"><strong>Management participatif :</strong> Implication des salariés dans décisions</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Communication organisationnelle -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Communication Organisationnelle</div>
+                        <div class="node-content">
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Interne :</strong> Entre membres de l'organisation, cascade, transversale</div>
+                                <div class="sub-item"><strong>Externe :</strong> Vers clients, fournisseurs, public, media</div>
+                                <div class="sub-item"><strong>Ascendante :</strong> Du terrain vers direction (informations, suggestions)</div>
+                                <div class="sub-item"><strong>Descendante :</strong> De direction vers équipes (directives, objectifs)</div>
+                                <div class="sub-item"><strong>Transversale :</strong> Entre départements (collaboration)</div>
+                                <div class="sub-item"><strong>Formelle :</strong> Officielle, documentée, structurée</div>
+                                <div class="sub-item"><strong>Informelle :</strong> Conversation, réseau social, rumeurs</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Responsabilité sociétale -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Responsabilité Sociétale (RSE)</div>
+                        <div class="node-content">
+                            <div class="definition"><strong>RSE :</strong> Engagement volontaire d'intégrer enjeux sociaux, environnementaux, éthiques.</div>
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Pilier social :</strong> Droits humains, conditions travail, égalité, bien-être</div>
+                                <div class="sub-item"><strong>Pilier environnemental :</strong> Émissions, déchets, ressources, biodiversité</div>
+                                <div class="sub-item"><strong>Pilier économique :</strong> Gouvernance éthique, anti-corruption, transparence</div>
+                                <div class="sub-item"><strong>Rapportage :</strong> Bilan RSE, reporting extra-financier, objectifs durables</div>
+                                <div class="sub-item"><strong>Certification :</strong> ISO 26000, B-Corp, labels environnementaux</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ====== SECTION 5: TERMINALE - GESTION & FINANCE ====== -->
+            <div class="section">
+                <h2 class="section-title">💳 Terminale MSDGN - Gestion & Finance</h2>
+                <div class="mindmap">
+                    <!-- Compte de résultat -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Compte de Résultat & Profitabilité</div>
+                        <div class="node-content">
+                            <div class="definition"><strong>Compte de Résultat :</strong> État financier montrant revenus, coûts et bénéfice sur une période.</div>
+                            <div class="formula">Chiffre d'Affaires - Charges = Résultat Net</div>
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>CA (Chiffre d'Affaires) :</strong> Ventes de biens et services</div>
+                                <div class="sub-item"><strong>Coût des ventes :</strong> Coûts directement liés à la production vendue</div>
+                                <div class="sub-item"><strong>Marge brute :</strong> CA - Coût des ventes</div>
+                                <div class="sub-item"><strong>Charges d'exploitation :</strong> Salaires, loyers, publicité, etc.</div>
+                                <div class="sub-item"><strong>Résultat d'exploitation :</strong> Marge brute - Charges d'exploitation</div>
+                                <div class="sub-item"><strong>Résultat net :</strong> Après intérêts et impôts</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Seuil de rentabilité -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Seuil de Rentabilité & Point Mort</div>
+                        <div class="node-content">
+                            <div class="definition"><strong>Seuil de Rentabilité :</strong> Montant CA où Bénéfice = 0 (charges fixes couvertes).</div>
+                            <div class="formula">SR (valeur) = Charges Fixes / Taux Marge sur Coût Variable</div>
+                            <div class="formula">SR (quantité) = SR (valeur) / Prix Vente Unitaire</div>
+                            <div class="formula">Taux MVCV = Marge CV / CA</div>
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Marge sur Coût Variable :</strong> CA - Charges variables</div>
+                                <div class="sub-item"><strong>Point mort (jours) :</strong> (SR en valeur / CA) × 365</div>
+                                <div class="sub-item"><strong>Sécurité :</strong> Marge > SR ⟹ "Taux de sécurité = (CA - SR) / CA"</div>
+                                <div class="sub-item"><strong>Levier opérationnel :</strong> Impact d'une baisse CA sur résultat</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bilan -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Bilan & Équilibre Financier</div>
+                        <div class="node-content">
+                            <div class="definition"><strong>Bilan :</strong> Photo du patrimoine à une date donnée (Actif = Passif + Capitaux propres).</div>
+                            <div class="formula">Équation Bilan = Actif = Passif + Capitaux Propres</div>
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Actif immobilisé :</strong> Bâtiments, machines, investissements long terme</div>
+                                <div class="sub-item"><strong>Actif circulant :</strong> Stock, créances clients, trésorerie</div>
+                                <div class="sub-item"><strong>Capitaux propres :</strong> Capital apporté + réserves + résultats</div>
+                                <div class="sub-item"><strong>Dettes financières :</strong> Emprunts bancaires, obligations</div>
+                                <div class="sub-item"><strong>Dettes d'exploitation :</strong> Fournisseurs, salaires à payer</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fonds de roulement -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Fonds de Roulement & Trésorerie</div>
+                        <div class="node-content">
+                            <div class="formula">FRNG = Passif Stable - Actif Stable</div>
+                            <div class="formula">FRNG = Capitaux propres + Dettes long terme - Immobilisations</div>
+                            <div class="formula">BFR = Actif Circulant - Passif Circulant</div>
+                            <div class="formula">Trésorerie = FRNG - BFR</div>
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>FRNG > 0 :</strong> Entreprise solvable, ressources pour financer l'exploitation</div>
+                                <div class="sub-item"><strong>BFR positif :</strong> Besoin de financement pour exploiter (stock, crédit clients)</div>
+                                <div class="sub-item"><strong>Trésorerie positive :</strong> Liquidités disponibles immédiatement</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ratios financiers -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Ratios Financiers & Analyse</div>
+                        <div class="node-content">
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Rentabilité :</strong> Résultat / Capitaux propres × 100</div>
+                                <div class="sub-item"><strong>Profitabilité :</strong> Résultat / CA × 100</div>
+                                <div class="sub-item"><strong>Liquidité générale :</strong> Actif circulant / Passif circulant (doit être > 1)</div>
+                                <div class="sub-item"><strong>Ratio d'endettement :</strong> Dettes totales / Capitaux propres</div>
+                                <div class="sub-item"><strong>Indépendance financière :</strong> Capitaux propres / Financement total × 100</div>
+                                <div class="sub-item"><strong>ROA :</strong> Résultat / Actif total (efficacité des actifs)</div>
+                                <div class="sub-item"><strong>ROE :</strong> Résultat / Capitaux propres (rentabilité pour actionnaires)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Coûts spécifiques -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Analyse par Coûts Spécifiques (Terminale)</div>
+                        <div class="node-content">
+                            <div class="definition"><strong>Coûts spécifiques :</strong> Charges variables + Charges fixes directes à un produit/gamme.</div>
+                            <div class="formula">Marge sur Coûts Spécifiques = CA - Charges Variables - Charges Fixes Directes</div>
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Utilité :</strong> Savoir si une gamme couvre ses frais propres (hors fixes communes)</div>
+                                <div class="sub-item"><strong>MCS négative :</strong> Produit ne contribue pas, à envisager abandon</div>
+                                <div class="sub-item"><strong>MCS positive :</strong> Contribue au financement des charges communes</div>
+                                <div class="sub-item"><strong>Différence coûts complets :</strong> C.complets considèrent toutes charges, y compris communes</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Trésorerie -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Gestion de la Trésorerie</div>
+                        <div class="node-content">
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Prévision de trésorerie :</strong> Encaissements - Décaissements estimés</div>
+                                <div class="sub-item"><strong>Délais :</strong> Crédit clients (30-60j), Crédit fournisseurs (30-60j)</div>
+                                <div class="sub-item"><strong>Gestion du BFR :</strong> Réduire délais clients, augmenter délais fournisseurs</div>
+                                <div class="sub-item"><strong>Financements :</strong> Court terme (crédit), moyen terme (emprunt), long terme (capital)</div>
+                                <div class="sub-item"><strong>Placements :</strong> Excédents en comptes rémunérés, bons du trésor</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Investissement -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Décisions d'Investissement</div>
+                        <div class="node-content">
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>VAN (Valeur Actuelle Nette) :</strong> Somme des flux actualisés - Investissement initial</div>
+                                <div class="sub-item"><strong>TRI (Taux de Rendement Interne) :</strong> Taux où VAN = 0</div>
+                                <div class="sub-item"><strong>Délai de récupération :</strong> Temps pour récupérer l'investissement</div>
+                                <div class="sub-item"><strong>Décision :</strong> VAN > 0 ⟹ Investissement profitable, TRI > Taux requis</div>
+                                <div class="sub-item"><strong>Financement :</strong> Autofinancement, emprunt, capital, locations</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ====== SECTION 6: TERMINALE - MERCATIQUE ====== -->
+            <div class="section">
+                <h2 class="section-title">📢 Terminale MSDGN - Mercatique (Marketing)</h2>
+                <div class="mindmap">
+                    <!-- Étude de marché -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Étude de Marché & Segmentation</div>
+                        <div class="node-content">
+                            <div class="definition"><strong>Étude de marché :</strong> Analyse de l'offre, demande, tendances, concurrence.</div>
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Demande :</strong> Besoin + capacité d'achat (besoins vs demande solvable)</div>
+                                <div class="sub-item"><strong>Offre :</strong> Produits/services disponibles, concurrents</div>
+                                <div class="sub-item"><strong>Segmentation :</strong> Découper marché en groupes homogènes (âge, revenu, géographie)</div>
+                                <div class="sub-item"><strong>Positionnement :</strong> Image du produit dans l'esprit du consommateur</div>
+                                <div class="sub-item"><strong>Cible :</strong> Segment prioritaire visé par entreprise</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mix marketing -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Le Mix Marketing (4P)</div>
+                        <div class="node-content">
+                            <div class="definition"><strong>Mix marketing :</strong> Ensemble des variables contrôlables de l'offre commerciale.</div>
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Produit (Product) :</strong> Caractéristiques, design, qualité, gamme, marque</div>
+                                <div class="sub-item"><strong>Prix (Price) :</strong> Stratégie tarifaire, réductions, conditions de paiement</div>
+                                <div class="sub-item"><strong>Place/Distribution :</strong> Canaux, emplacements, logistique, accessibilité</div>
+                                <div class="sub-item"><strong>Promotion :</strong> Publicité, RP, promotion des ventes, marketing direct</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stratégies tarifaires -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Stratégies de Pricing</div>
+                        <div class="node-content">
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Prix coûts plus marge :</strong> Coût de revient + marge souhaitée</div>
+                                <div class="sub-item"><strong>Prix de marché :</strong> Alignement sur concurrence</div>
+                                <div class="sub-item"><strong>Prix de valeur perçue :</strong> Basé sur ce que client est disposé à payer</div>
+                                <div class="sub-item"><strong>Écrémage :</strong> Prix élevé au lancement (innovation), puis baisse</div>
+                                <div class="sub-item"><strong>Pénétration :</strong> Prix bas pour conquérir rapidement parts de marché</div>
+                                <div class="sub-item"><strong>Réductions :</strong> Remises (volume), rabais (défaut), ristournes (fidélité)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Comportement consommateur -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Comportement du Consommateur</div>
+                        <div class="node-content">
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Rationalité :</strong> Achat réfléchi (information, comparaison) vs impulsif</div>
+                                <div class="sub-item"><strong>Motivations :</strong> Utilitaires (fonctionnels) vs hédoniques (plaisir, émotions)</div>
+                                <div class="sub-item"><strong>Freins :</strong> Coût, doute, risque perçu, manque d'info</div>
+                                <div class="sub-item"><strong>Processus décision :</strong> Reconnaissance besoin → Info → Évaluation → Achat → Post-achat</div>
+                                <div class="sub-item"><strong>Influence :</strong> Famille, pairs, culture, publicité, recommandations</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Relation client -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Digitalisation & Relation Client</div>
+                        <div class="node-content">
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>CRM (Gestion Relation Client) :</strong> Base de données, historique, personnalisation</div>
+                                <div class="sub-item"><strong>E-commerce :</strong> Vente en ligne, plateforme, paiement sécurisé</div>
+                                <div class="sub-item"><strong>Réseaux sociaux :</strong> Community management, engagement, user-generated content</div>
+                                <div class="sub-item"><strong>Marketing digital :</strong> SEO, SEM, email, contenu, influenceurs</div>
+                                <div class="sub-item"><strong>Omnicanal :</strong> Cohérence entre en ligne et magasin physique</div>
+                                <div class="sub-item"><strong>Données clients :</strong> Exploitation, RGPD, transparence</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Innovation produit -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Innovation & Cycle de Vie Produit</div>
+                        <div class="node-content">
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Innovations :</strong> Produit (nouveau), procédé (fabrication), organisationnelle</div>
+                                <div class="sub-item"><strong>Cycle de vie :</strong> Lancement (faible vente, R&D) → Croissance → Maturité (pic ventes) → Déclin</div>
+                                <div class="sub-item"><strong>Stratégies par phase :</strong> Lancement (notoriété), Croissance (part marché), Maturité (fidélité), Déclin (réduction)</div>
+                                <div class="sub-item"><strong>PLM (Product Lifecycle Management) :</strong> Gestion complète du cycle de vie</div>
+                                <div class="sub-item"><strong>Portfolio :</strong> Équilibre entre vedettes, vaches à lait, poids morts, dilemmes (BCG)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Communication marketing -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Communication Marketing & Publicité</div>
+                        <div class="node-content">
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Stratégie de communication :</strong> Objectifs (notoriété, considération, achat), messages, cibles</div>
+                                <div class="sub-item"><strong>Médias :</strong> TV, radio, presse, affichage, numérique, réseaux sociaux</div>
+                                <div class="sub-item"><strong>Outils :</strong> Publicité, RP, sponsoring, marketing événementiel</div>
+                                <div class="sub-item"><strong>Publicité comparative :</strong> vs concurrents, attention au positionnement</div>
+                                <div class="sub-item"><strong>Études créatives :</strong> Pré-test (efficacité), post-test (impact réel)</div>
+                                <div class="sub-item"><strong>Influence marketing :</strong> Influenceurs, ambassadeurs, recommandations</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Distribution -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Canaux de Distribution</div>
+                        <div class="node-content">
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Distributions :</strong> Intensive (partout), sélective (choix de points), exclusive (partenaires)</div>
+                                <div class="sub-item"><strong>Acteurs :</strong> Producteur → Grossiste → Détaillant → Consommateur</div>
+                                <div class="sub-item"><strong>Marges commerciales :</strong> Marge par niveau selon charges et risques</div>
+                                <div class="sub-item"><strong>Circuits courts :</strong> Vente directe, AMAP, boutique en ligne du producteur</div>
+                                <div class="sub-item"><strong>Logistique :</strong> Transport, stock, traçabilité, fraîcheur</div>
+                                <div class="sub-item"><strong>Franchise :</strong> Modèle de croissance externe sans capital</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ====== SECTION 7: TERMINALE - RH ET COMMUNICATION ====== -->
+            <div class="section">
+                <h2 class="section-title">👥 Terminale MSDGN - RH & Communication</h2>
+                <div class="mindmap">
+                    <!-- Gestion RH -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Gestion des Ressources Humaines</div>
+                        <div class="node-content">
+                            <div class="definition"><strong>GRH :</strong> Ensemble des pratiques pour attirer, développer, maintenir et valoriser les talents.</div>
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Planification RH :</strong> Prévisions d'emploi, recrutement, formation</div>
+                                <div class="sub-item"><strong>Recrutement :</strong> Annonce, sélection, entretien, embauche</div>
+                                <div class="sub-item"><strong>Onboarding :</strong> Intégration, accueil, formation initiale</div>
+                                <div class="sub-item"><strong>Formation continue :</strong> Développement compétences, actualisation</div>
+                                <div class="sub-item"><strong>Évaluation :</strong> Entretien annuel, appréciation, feedback</div>
+                                <div class="sub-item"><strong>Carrière :</strong> Mobilité, promotion, plan succession</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Rémunération -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Rémunération & Avantages</div>
+                        <div class="node-content">
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Salaire de base :</strong> Rémunération fixe mensuelle/annuelle</div>
+                                <div class="sub-item"><strong>Primes/Bonus :</strong> Variable (performance, résultats, objectifs)</div>
+                                <div class="sub-item"><strong>Avantages sociaux :</strong> Mutuelle, retraite, congés, chèques vacances</div>
+                                <div class="sub-item"><strong>Rémunération globale :</strong> Salaire + avantages + intangibles</div>
+                                <div class="sub-item"><strong>Équité salariale :</strong> Égal pour travail égal, non-discrimination</div>
+                                <div class="sub-item"><strong>Structures :</strong> Grilles selon qualification, séniorité, performance</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Culture & climat -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Culture & Climat Organisationnels</div>
+                        <div class="node-content">
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Culture :</strong> Valeurs, croyances, normes partagées, histoire</div>
+                                <div class="sub-item"><strong>Types :</strong> Clan (familial), adhocracie (innovante), marché (compétitive), hiérarchie (stable)</div>
+                                <div class="sub-item"><strong>Climat :</strong> Perception du travail, ambiance, confiance, cohésion</div>
+                                <div class="sub-item"><strong>Engagement :</strong> Implication, adhésion aux objectifs</div>
+                                <div class="sub-item"><strong>Turnover :</strong> Départs, coûts de remplacement, impact</div>
+                                <div class="sub-item"><strong>Marque employeur :</strong> Réputation, attractivité auprès talents</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Conflits & négociation -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Conflits & Gestion des Relations</div>
+                        <div class="node-content">
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Origine conflits :</strong> Divergences d'intérêts, mauvaise communication, compétition ressources</div>
+                                <div class="sub-item"><strong>Niveaux :</strong> Interpersonnel, intra-groupe, inter-groupe, organisationnel</div>
+                                <div class="sub-item"><strong>Résolution :</strong> Dialogue, médiation, arbitrage, consensus</div>
+                                <div class="sub-item"><strong>Négociation :</strong> Gagnant-gagnant, intérêts communs, compromis</div>
+                                <div class="sub-item"><strong>Syndicats :</strong> Représentation, conventions, négociations collectives</div>
+                                <div class="sub-item"><strong>Bien-être au travail :</strong> Santé mentale, prévention RPS (Risques Psycho-Sociaux)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Conditions travail -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Conditions de Travail & Sécurité</div>
+                        <div class="node-content">
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Horaires :</strong> 35h, flexibilité, télétravail, aménagement temps</div>
+                                <div class="sub-item"><strong>Environnement :</strong> Ergonomie, lumière, bruit, température</div>
+                                <div class="sub-item"><strong>Santé & Sécurité :</strong> Formation, équipement, prévention accidents</div>
+                                <div class="sub-item"><strong>CHSCT :</strong> Commission Hygiène Sécurité Conditions Travail (dialogue)</div>
+                                <div class="sub-item"><strong>QVT (Qualité Vie Travail) :</strong> Équilibre pro/perso, sens du travail</div>
+                                <div class="sub-item"><strong>Diversité :</strong> Égalité, inclusion, lutte contre discriminations</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stratégies RH -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Stratégies RH & Alignement</div>
+                        <div class="node-content">
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>GPEC (Gestion Prévisionnelle) :</strong> Anticiper évolutions emplois/compétences</div>
+                                <div class="sub-item"><strong>Alignment :</strong> Stratégie RH doit soutenir stratégie entreprise</div>
+                                <div class="sub-item"><strong>Talent Management :</strong> Identifier, développer, retenir hauts potentiels</div>
+                                <div class="sub-item"><strong>Leadership :</strong> Développer prochains managers</div>
+                                <div class="sub-item"><strong>Innovation RH :</strong> Télétravail, flexibilité, espaces collaboratifs</div>
+                                <div class="sub-item"><strong>People Analytics :</strong> Données pour décisions RH basées données</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Communication interne -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Communication Interne & Externe</div>
+                        <div class="node-content">
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Interne :</strong> Journaux internes, réunions, intranets, e-mails</div>
+                                <div class="sub-item"><strong>Ascendante :</strong> Suggestion, remontée informations, voix du terrain</div>
+                                <div class="sub-item"><strong>Descendante :</strong> Directives, stratégie, objectifs, changements</div>
+                                <div class="sub-item"><strong>Transversale :</strong> Collaboration inter-départements</div>
+                                <div class="sub-item"><strong>Externe :</strong> Relations publiques, médias, communiqués</div>
+                                <div class="sub-item"><strong>Crise :</strong> Gestion transparence, responsabilité, rapidité</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Éthique -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Éthique & Responsabilité Sociale</div>
+                        <div class="node-content">
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Code éthique :</strong> Valeurs, principes, comportements attendus</div>
+                                <div class="sub-item"><strong>Droits humains :</strong> Non-discrimination, liberté association</div>
+                                <div class="sub-item"><strong>Rémunération juste :</strong> Salaire décent, équité</div>
+                                <div class="sub-item"><strong>Formation :</strong> Investissement développement compétences</div>
+                                <div class="sub-item"><strong>Durabilité :</strong> Maintien emplois, pérennité</div>
+                                <div class="sub-item"><strong>Reporting :</strong> Rapports extra-financiers, bilan RSE</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ====== SECTION 8: TERMINALE - SYSTÈMES D'INFORMATION ====== -->
+            <div class="section">
+                <h2 class="section-title">💻 Terminale MSDGN - Systèmes d'Information</h2>
+                <div class="mindmap">
+                    <!-- SI et organisations -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">SI & Transformation Organisationnelle</div>
+                        <div class="node-content">
+                            <div class="definition"><strong>SI :</strong> Infrastructure technologique + processus + données + personnes pour créer/utiliser info.</div>
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Rôle stratégique :</strong> Support stratégie, avantage compétitif, innovation</div>
+                                <div class="sub-item"><strong>Transformation :</strong> Changement processus, culture, compétences</div>
+                                <div class="sub-item"><strong>Agilité :</strong> Réactivité aux changements marché, flexibilité</div>
+                                <div class="sub-item"><strong>Données :</strong> Asset critique, gouvernance, qualité</div>
+                                <div class="sub-item"><strong>Cybersécurité :</strong> Protection données, authentification, conformité</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ERP & logiciels -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">ERP & Progiciels Intégrés</div>
+                        <div class="node-content">
+                            <div class="definition"><strong>ERP :</strong> Système intégré centralisant toutes données/processus de l'entreprise.</div>
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Avantages :</strong> Unicité données, suppression silos, décisions rapides</div>
+                                <div class="sub-item"><strong>Modules :</strong> Finance, RH, Ventes, Production, Approvisionnement</div>
+                                <div class="sub-item"><strong>Implémentation :</strong> Complexe, coûteux, changement organisationnel majeur</div>
+                                <div class="sub-item"><strong>Exemples :</strong> SAP, Oracle, Sage, Microsoft Dynamics</div>
+                                <div class="sub-item"><strong>Limites :</strong> Rigidité, customisation, coûts maintenance</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- BI & Analytics -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Business Intelligence & Data Analytics</div>
+                        <div class="node-content">
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>BI (Décisionnel) :</strong> Outils extraire, analyser, visualiser données</div>
+                                <div class="sub-item"><strong>Data Warehouse :</strong> Entrepôt centralisé données historiques</div>
+                                <div class="sub-item"><strong>Data Mining :</strong> Découvrir patterns, prédictions, anomalies</div>
+                                <div class="sub-item"><strong>Tableaux de bord :</strong> KPI en temps réel, monitoring</div>
+                                <div class="sub-item"><strong>Reporting :</strong> Rapports périodiques pour décideurs</div>
+                                <div class="sub-item"><strong>Predictive Analytics :</strong> Prévisions futures basées données historiques</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cloud & infrastructure -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Cloud Computing & Infrastructure</div>
+                        <div class="node-content">
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>IaaS :</strong> Infrastructure services (serveurs, stockage virtualisés)</div>
+                                <div class="sub-item"><strong>PaaS :</strong> Platform services (environnement développement)</div>
+                                <div class="sub-item"><strong>SaaS :</strong> Software services (applications en ligne, Salesforce, Google Workspace)</div>
+                                <div class="sub-item"><strong>Avantages :</strong> Flexibilité, scalabilité, CAPEX → OPEX, accès distant</div>
+                                <div class="sub-item"><strong>Risques :</strong> Sécurité données, dépendance fournisseur, latence</div>
+                                <div class="sub-item"><strong>Hybrid :</strong> Mix on-premises + cloud selon besoins</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sécurité IT -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Cybersécurité & Protection Données</div>
+                        <div class="node-content">
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Menaces :</strong> Malware, phishing, ransomware, DDoS, inside threats</div>
+                                <div class="sub-item"><strong>Authentification :</strong> Identifiants, MFA, biométrie</div>
+                                <div class="sub-item"><strong>Chiffrement :</strong> Protection données en transit et repos</div>
+                                <div class="sub-item"><strong>Pare-feu :</strong> Contrôle entrées/sorties réseau</div>
+                                <div class="sub-item"><strong>RGPD :</strong> Droit oubli, consentement, transparence données personnelles</div>
+                                <div class="sub-item"><strong>Conformité :</strong> Audits, certifications ISO 27001, plans continuité</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- IoT & IA -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">IoT, IA & Émergentes</div>
+                        <div class="node-content">
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>IoT (Internet des Objets) :</strong> Capteurs, connectivité, données en temps réel</div>
+                                <div class="sub-item"><strong>IA (Intelligence Artificielle) :</strong> Machine learning, deep learning, NLP</div>
+                                <div class="sub-item"><strong>Chatbots/Assistants :</strong> Service client 24/7, automatisation</div>
+                                <div class="sub-item"><strong>Blockchain :</strong> Sécurité, transparence, traçabilité, smart contracts</div>
+                                <div class="sub-item"><strong>RPA (Robotic Process Automation) :</strong> Automatisation workflows</div>
+                                <div class="sub-item"><strong>5G :</strong> Vitesse réseau, latence faible, connectivité massive</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gouvernance IT -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Gouvernance IT & DSI</div>
+                        <div class="node-content">
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Alignement :</strong> Stratégie IT soutient stratégie business</div>
+                                <div class="sub-item"><strong>Portfolio :</strong> Gestion projets, priorisation investissements</div>
+                                <div class="sub-item"><strong>ITIL/ITSM :</strong> Service management, opérations stables</div>
+                                <div class="sub-item"><strong>Agile/DevOps :</strong> Livraison rapide, itérative, collaboration</div>
+                                <div class="sub-item"><strong>ROI IT :</strong> Mesure retour sur investissement technologique</div>
+                                <div class="sub-item"><strong>Change Management :</strong> Accompagnement utilisateurs, adoption</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Compétences digitales -->
+                    <div class="node">
+                        <div class="node-title" onclick="toggleNode(this)">Compétences Digitales & Formation</div>
+                        <div class="node-content">
+                            <div class="sub-items">
+                                <div class="sub-item"><strong>Littératie digitale :</strong> Compétences basiques numérique (tous)</div>
+                                <div class="sub-item"><strong>Data literacy :</strong> Comprendre/utiliser données</div>
+                                <div class="sub-item"><strong>Spécialisées :</strong> Dev, admin, DBA, architecte, security</div>
+                                <div class="sub-item"><strong>Soft skills :</strong> Communication, collaboration, résolution problèmes</div>
+                                <div class="sub-item"><strong>Formation continue :</strong> Certifications, bootcamps, auto-apprentissage</div>
+                                <div class="sub-item"><strong>Rétention talent :</strong> Développement carrière tech</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>📚 <strong>Mind Map Complète STMG 1ère + Terminale MSDGN</strong></p>
+            <p>✨ Tous les thèmes, définitions, formules et calculs couverts dans ce document interactif</p>
+            <p>💡 <strong>Comment utiliser :</strong> Cliquez sur chaque titre pour développer/réduire | Boutons en haut pour contrôle global | Partager sur GitHub pour étudier hors ligne</p>
+            <p style="margin-top: 20px; font-size: 0.85em;">Dernière mise à jour : Mai 2026 | Basé sur programmes officiels Éducation Nationale</p>
+        </footer>
+    </div>
+
+    <script>
+        function toggleNode(element) {
+            const content = element.nextElementSibling;
+            element.classList.toggle('active');
+            content.classList.toggle('active');
+        }
+
+        function expandAll() {
+            const allTitles = document.querySelectorAll('.node-title');
+            const allContents = document.querySelectorAll('.node-content');
+            allTitles.forEach(title => title.classList.add('active'));
+            allContents.forEach(content => content.classList.add('active'));
+        }
+
+        function collapseAll() {
+            const allTitles = document.querySelectorAll('.node-title');
+            const allContents = document.querySelectorAll('.node-content');
+            allTitles.forEach(title => title.classList.remove('active'));
+            allContents.forEach(content => content.classList.remove('active'));
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // Clavier
+        document.querySelectorAll('.node-title').forEach(element => {
+            element.setAttribute('role', 'button');
+            element.setAttribute('tabindex', '0');
+            element.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    toggleNode(this);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
